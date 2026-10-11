@@ -1,0 +1,9 @@
+codigo,producto,unidad,existencias,minimo,costo_unitario
+INS-0101,Harina de trigo x 25 kg,bulto,38,15,92000
+INS-0102,Azúcar refinada x 50 kg,bulto,7,10,148000
+INS-0203,Aceite vegetal x 20 L,caja,30,12,186000
+INS-0204,Arroz blanco x 25 kg,bulto,0,20,112000
+INS-0305,Servilletas x 1000 u,paca,120,40,38000
+INS-0306,Vasos desechables 7 oz x 2500,caja,25,15,95000
+INS-0407,Pollo congelado x 10 kg,caja,3,8,215000
+INS-0408,Queso mozzarella x 5 kg,bloque,60,20,94000

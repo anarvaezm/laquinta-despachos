@@ -1,0 +1,2 @@
+id_incidencia,fecha_hora,codigo_recibido,cantidad,solicitante,correo,destino,motivo,causa
+INC-20261010-185325,2026-10-10 18:53:25,INS-9999,3,Restaurante El Bambú,pedidos@elbambu.co,"Sede Granada, Cali",despacho,Código inexistente en inventario

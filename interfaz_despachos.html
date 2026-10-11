@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La Quinta · Despachos de bodega</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&display=swap" rel="stylesheet">
+<style>
+/* ======= CONFIGURACIÓN: pegue aquí las URLs de sus webhooks de Make ======= */
+</style>
+<script>
+  const WEBHOOK_DESPACHO  = "https://hook.eu1.make.com/34bimelsbb7ajkdcfdgg7le2x1rhym2o";
+  const WEBHOOK_HISTORIAL = "https://hook.eu1.make.com/6bkdokr9vqxmbfs7lehrmjcf04r9kyvp";
+</script>
+<style>
+:root{
+  --verde:#173a2e; --verde-2:#24513f; --papel:#eef0e9; --blanco:#fbfbf7;
+  --tinta:#1d2420; --gris:#5b6660; --linea:#cfd5cb;
+  --amarillo:#e8b41c; --ok:#2f7a4d; --rojo:#b3412e; --azul:#3a5a7c;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:"Archivo",system-ui,"Segoe UI",Arial,sans-serif;background:var(--papel);color:var(--tinta);font-size:16px;line-height:1.45}
+header{background:var(--verde);color:var(--blanco);position:relative}
+header::after{content:"";display:block;height:10px;background:repeating-linear-gradient(-45deg,var(--amarillo) 0 14px,var(--verde) 14px 28px)}
+.top{max-width:1180px;margin:0 auto;padding:22px 24px 18px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.marca h1{font-stretch:118%;font-weight:800;font-size:28px;margin:0;letter-spacing:-.01em}
+.marca p{margin:2px 0 0;color:#b9cbbf;font-size:14px}
+nav{display:flex;gap:4px;background:var(--verde-2);padding:4px;border-radius:10px}
+nav button{font:inherit;font-weight:600;border:0;background:transparent;color:#d6e2da;padding:10px 18px;border-radius:7px;cursor:pointer}
+nav button[aria-selected="true"]{background:var(--amarillo);color:var(--verde)}
+nav button:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--amarillo);outline-offset:2px}
+main{max-width:1180px;margin:0 auto;padding:28px 24px 60px}
+.vista[hidden]{display:none}
+.reg{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:860px){.reg{grid-template-columns:1fr}}
+form{background:var(--blanco);border:1px solid var(--linea);border-radius:12px;padding:26px}
+form h2,.panel h2{font-stretch:110%;font-size:22px;margin:0 0 4px}
+.sub{color:var(--gris);margin:0 0 20px;font-size:14px}
+.campos{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.campos .full{grid-column:1/-1}
+@media (max-width:520px){.campos{grid-template-columns:1fr}}
+label{display:block;font-weight:600;font-size:14px;margin-bottom:6px}
+input,select{width:100%;font:inherit;padding:11px 12px;border:1px solid #b9c1b5;border-radius:8px;background:#fff;color:var(--tinta)}
+.ayuda{font-size:13px;color:var(--gris);margin-top:4px;min-height:18px}
+.acciones{display:flex;gap:12px;align-items:center;margin-top:22px;flex-wrap:wrap}
+.btn{font:inherit;font-weight:700;border:0;border-radius:8px;padding:13px 22px;cursor:pointer;background:var(--verde);color:var(--blanco)}
+.btn:disabled{opacity:.6;cursor:progress}
+.btn.sec{background:transparent;color:var(--verde);border:1px solid var(--verde)}
+.pruebas{margin-top:22px;padding-top:18px;border-top:1px dashed var(--linea)}
+.pruebas p{margin:0 0 8px;font-size:14px;color:var(--gris)}
+.pruebas div{display:flex;gap:8px;flex-wrap:wrap}
+.pruebas button{font:inherit;font-size:14px;font-weight:600;border:1px solid var(--linea);background:var(--papel);border-radius:6px;padding:7px 12px;cursor:pointer}
+/* Comprobante: el elemento memorable */
+.comprobante{background:var(--blanco);border:1px solid var(--linea);border-radius:12px;overflow:hidden;position:sticky;top:16px}
+.comprobante .franja{height:8px;background:var(--linea)}
+.comprobante .cuerpo{padding:24px 26px 26px}
+.vacio{color:var(--gris)}
+.sello{display:inline-block;font-stretch:125%;font-weight:800;font-size:30px;line-height:1.05;padding:10px 16px;border:4px solid currentColor;border-radius:6px;transform:rotate(-2deg);margin:6px 0 16px}
+.estado-APROBADO .franja{background:var(--ok)} .estado-APROBADO .sello{color:var(--ok)}
+.estado-ALERTA .franja{background:var(--amarillo)} .estado-ALERTA .sello{color:#9a7300}
+.estado-RECHAZADO .franja{background:var(--rojo)} .estado-RECHAZADO .sello{color:var(--rojo)}
+.estado-RESPALDO .franja{background:var(--azul)} .estado-RESPALDO .sello{color:var(--azul)}
+.estado-ERROR .franja{background:var(--tinta)} .estado-ERROR .sello{color:var(--tinta)}
+.msj{font-size:17px;margin:0 0 18px}
+dl.datos{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;margin:0;font-size:15px}
+dl.datos dt{color:var(--gris)} dl.datos dd{margin:0;font-weight:600}
+.cuenta{font-variant-numeric:tabular-nums;font-size:20px;font-weight:700;margin:16px 0 0;padding:12px 14px;background:var(--papel);border-radius:8px}
+/* Historial */
+.panel{background:var(--blanco);border:1px solid var(--linea);border-radius:12px;padding:24px}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:18px 0 22px}
+@media (max-width:760px){.kpis{grid-template-columns:1fr}}
+.kpi{border-left:6px solid var(--amarillo);background:var(--papel);padding:14px 16px;border-radius:0 8px 8px 0}
+.kpi b{display:block;font-size:30px;font-stretch:112%;font-variant-numeric:tabular-nums}
+.kpi span{font-size:14px;color:var(--gris)}
+.filtros{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+.filtros > div{min-width:180px;flex:1}
+.tabla{overflow-x:auto;border:1px solid var(--linea);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:980px}
+th{background:var(--verde);color:var(--blanco);text-align:left;font-weight:600;padding:10px}
+td{padding:9px 10px;border-top:1px solid var(--linea);font-variant-numeric:tabular-nums;vertical-align:top}
+tr:nth-child(even) td{background:#f4f5ef}
+.chip{display:inline-block;font-weight:700;font-size:12px;padding:3px 8px;border-radius:20px;white-space:nowrap}
+.c-ok{background:#dcecdf;color:var(--ok)} .c-al{background:#f8e7b2;color:#7a5b00}
+.estado-hist{color:var(--gris);padding:18px 4px}
+@media (prefers-reduced-motion:no-preference){.sello{animation:sellar .28s ease-out}}
+@keyframes sellar{from{transform:rotate(-2deg) scale(1.35);opacity:0}to{transform:rotate(-2deg) scale(1);opacity:1}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <div class="marca">
+      <h1>Distribuidora La Quinta</h1>
+      <p>Bodega Cali · registro de despachos con inventario en línea</p>
+    </div>
+    <nav role="tablist" aria-label="Vistas">
+      <button role="tab" id="tab-reg" aria-selected="true" aria-controls="v-reg">Registrar despacho</button>
+      <button role="tab" id="tab-his" aria-selected="false" aria-controls="v-his">Historial de movimientos</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+<!-- ============ VISTA 1: REGISTRO ============ -->
+<section id="v-reg" class="vista" role="tabpanel" aria-labelledby="tab-reg">
+  <div class="reg">
+    <form id="f" novalidate>
+      <h2>Nuevo despacho</h2>
+      <p class="sub">El sistema consulta existencias, calcula el saldo y responde en segundos.</p>
+      <div class="campos">
+        <div><label for="solicitante">Solicitante</label><input id="solicitante" required placeholder="Restaurante o persona"></div>
+        <div><label for="correo">Correo</label><input id="correo" type="email" required placeholder="nombre@empresa.com"></div>
+        <div><label for="codigo_producto">Código del producto</label>
+          <input id="codigo_producto" list="codigos" required placeholder="INS-0101" autocomplete="off">
+          <datalist id="codigos">
+            <option value="INS-0101">Harina de trigo x 25 kg</option><option value="INS-0102">Azúcar refinada x 50 kg</option>
+            <option value="INS-0203">Aceite vegetal x 20 L</option><option value="INS-0204">Arroz blanco x 25 kg</option>
+            <option value="INS-0305">Servilletas x 1000 u</option><option value="INS-0306">Vasos desechables 7 oz x 2500</option>
+            <option value="INS-0407">Pollo congelado x 10 kg</option><option value="INS-0408">Queso mozzarella x 5 kg</option>
+          </datalist>
+          <div class="ayuda" id="nombre-prod"></div></div>
+        <div><label for="cantidad">Cantidad</label><input id="cantidad" type="number" min="1" step="1" required></div>
+        <div><label for="destino">Destino</label><input id="destino" required placeholder="Sede o restaurante"></div>
+        <div><label for="motivo">Motivo</label>
+          <select id="motivo" required>
+            <option value="despacho">Despacho</option>
+            <option value="traslado entre sedes">Traslado entre sedes</option>
+            <option value="avería">Avería</option>
+          </select></div>
+      </div>
+      <div class="ayuda" id="err" role="alert" style="color:var(--rojo);margin-top:12px"></div>
+      <div class="acciones">
+        <button class="btn" id="enviar" type="submit">Registrar despacho</button>
+        <button class="btn sec" type="reset">Limpiar</button>
+      </div>
+      <div class="pruebas">
+        <p>Casos de prueba del parcial: llenan el formulario; el envío se hace con «Registrar despacho».</p>
+        <div>
+          <button type="button" data-c="INS-0101,10">C1</button>
+          <button type="button" data-c="INS-0102,5">C2</button>
+          <button type="button" data-c="INS-0407,5">C3</button>
+          <button type="button" data-c="INS-9999,3">C4</button>
+          <button type="button" data-c="INS-0204,7">C5</button>
+        </div>
+      </div>
+    </form>
+
+    <aside class="comprobante" id="comp" aria-live="polite">
+      <div class="franja"></div>
+      <div class="cuerpo" id="comp-cuerpo">
+        <h2 style="font-size:20px;margin:0 0 8px">Respuesta del proceso</h2>
+        <p class="vacio">Registre un despacho y aquí verá si fue aprobado, aprobado con alerta, rechazado o enviado a la ruta de respaldo.</p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ VISTA 2: HISTORIAL ============ -->
+<section id="v-his" class="vista panel" role="tabpanel" aria-labelledby="tab-his" hidden>
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap">
+    <div><h2>Historial de movimientos</h2><p class="sub" style="margin:0">Cada salida aprobada queda con su saldo antes y después.</p></div>
+    <button class="btn sec" id="recargar" type="button">Actualizar historial</button>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><b id="k1">–</b><span>Tiempo de respuesta promedio (segundos)</span></div>
+    <div class="kpi"><b id="k2">–</b><span>Despachos que dejan el producto bajo mínimo</span></div>
+    <div class="kpi"><b id="k3">–</b><span>Valor despachado en el filtro</span></div>
+  </div>
+  <div class="filtros">
+    <div><label for="fc">Código o producto</label><input id="fc" placeholder="Ej. INS-0204 o arroz"></div>
+    <div><label for="fr">Resultado</label><select id="fr"><option value="">Todos</option><option>APROBADO</option><option>APROBADO CON ALERTA</option></select></div>
+    <div><label for="fm">Motivo</label><select id="fm"><option value="">Todos</option><option>despacho</option><option>traslado entre sedes</option><option>avería</option></select></div>
+  </div>
+  <div class="tabla">
+    <table>
+      <thead><tr><th>Fecha y hora</th><th>Movimiento</th><th>Producto</th><th>Motivo</th><th>Cant.</th><th>Antes</th><th>Saldo</th><th>Mín.</th><th>Valor</th><th>Destino</th><th>Solicitante</th><th>Resultado</th></tr></thead>
+      <tbody id="tb"></tbody>
+    </table>
+  </div>
+  <div class="estado-hist" id="eh">Pulse «Actualizar historial» para cargar los movimientos.</div>
+</section>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const NOMBRES = {"INS-0101":"Harina de trigo x 25 kg","INS-0102":"Azúcar refinada x 50 kg","INS-0203":"Aceite vegetal x 20 L","INS-0204":"Arroz blanco x 25 kg","INS-0305":"Servilletas x 1000 u","INS-0306":"Vasos desechables 7 oz x 2500","INS-0407":"Pollo congelado x 10 kg","INS-0408":"Queso mozzarella x 5 kg"};
+const pesos = n => isNaN(n) ? "–" : "$" + Number(n).toLocaleString("es-CO");
+const limpio = s => String(s ?? "").replace(/["\\]/g, "'").trim();   // evita romper el JSON del historial
+const esc = s => String(s ?? "").replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+
+/* ---- pestañas ---- */
+function mostrar(v){
+  const reg = v === "reg";
+  $("#tab-reg").setAttribute("aria-selected", reg); $("#tab-his").setAttribute("aria-selected", !reg);
+  $("#v-reg").hidden = !reg; $("#v-his").hidden = reg;
+  if (!reg && !cargado) cargarHistorial();
+}
+$("#tab-reg").onclick = () => mostrar("reg");
+$("#tab-his").onclick = () => mostrar("his");
+
+/* ---- ayuda de producto ---- */
+$("#codigo_producto").addEventListener("input", e => {
+  const c = e.target.value.trim().toUpperCase();
+  $("#nombre-prod").textContent = NOMBRES[c] || (c.length >= 8 ? "Código no está en el catálogo local; el sistema lo verificará." : "");
+});
+
+/* ---- casos de prueba ---- */
+document.querySelectorAll(".pruebas button").forEach(b => b.onclick = () => {
+  const [c, q] = b.dataset.c.split(",");
+  $("#solicitante").value ||= "Restaurante El Bambú";
+  $("#correo").value ||= "pedidos@elbambu.co";
+  $("#destino").value ||= "Sede Granada, Cali";
+  $("#codigo_producto").value = c; $("#cantidad").value = q;
+  $("#codigo_producto").dispatchEvent(new Event("input"));
+  $("#err").textContent = "";
+});
+
+/* ---- registro: dispara el webhook de Make ---- */
+$("#f").addEventListener("submit", async e => {
+  e.preventDefault();
+  const campos = ["solicitante","correo","codigo_producto","cantidad","destino","motivo"];
+  const falt = campos.filter(id => !$("#" + id).value.trim());
+  if (falt.length) { $("#err").textContent = "Complete: " + falt.join(", ").replace("_producto"," del producto") + "."; return; }
+  if (!/^\S+@\S+\.\S+$/.test($("#correo").value)) { $("#err").textContent = "El correo no tiene un formato válido."; return; }
+  $("#err").textContent = "";
+
+  const ahora = new Date();
+  const datos = new URLSearchParams();            // form-urlencoded = petición simple, sin preflight CORS
+  campos.forEach(id => datos.append(id, limpio($("#" + id).value)));
+  datos.set("codigo_producto", limpio($("#codigo_producto").value).toUpperCase());
+  datos.append("fecha_solicitud", ahora.toISOString());
+  datos.append("ts_solicitud", ahora.getTime());
+  datos.append("origen", "interfaz-web");
+
+  const btn = $("#enviar"); btn.disabled = true; btn.textContent = "Consultando inventario…";
+  try {
+    const r = await fetch(WEBHOOK_DESPACHO, { method: "POST", body: datos });
+    const texto = await r.text();
+    let j; try { j = JSON.parse(texto); } catch { throw new Error("Make respondió sin JSON: «" + texto.slice(0,80) + "». Revise que el escenario esté activo y termine en Webhook response."); }
+    pintar(j);
+    cargado = false;
+  } catch (err) {
+    pintar({ resultado: "ERROR", mensaje: err.message || "No hubo respuesta del proceso. Revise la URL del webhook y la conexión." });
+  } finally { btn.disabled = false; btn.textContent = "Registrar despacho"; }
+});
+
+function pintar(j){
+  const r = (j.resultado || "").toUpperCase();
+  const clase = r === "APROBADO" ? "APROBADO" : r.includes("ALERTA") ? "ALERTA" : r === "RECHAZADO" ? "RECHAZADO" : r.includes("RESPALDO") ? "RESPALDO" : "ERROR";
+  $("#comp").className = "comprobante estado-" + clase;
+  let h = `<span class="sello">${esc(r || "SIN RESPUESTA")}</span><p class="msj">${esc(j.mensaje)}</p><dl class="datos">`;
+  const fila = (k, v) => { if (v !== undefined && v !== "") h += `<dt>${k}</dt><dd>${esc(v)}</dd>`; };
+  fila("Código", j.codigo); fila("Producto", j.producto); fila("Cantidad pedida", j.cantidad);
+  fila("Existencias antes", j.existencias_antes); fila("Mínimo", j.minimo);
+  fila("Nivel de alerta", j.nivel_alerta); fila("Faltante", j.faltante); fila("Movimiento", j.id_movimiento);
+  h += "</dl>";
+  if (j.saldo !== undefined && j.existencias_antes !== undefined)
+    h += `<p class="cuenta">${esc(j.existencias_antes)} − ${esc(j.cantidad)} = ${esc(j.saldo)}</p>`;
+  $("#comp-cuerpo").innerHTML = h;
+}
+
+/* ---- historial ---- */
+let movs = [], cargado = false;
+async function cargarHistorial(){
+  $("#eh").textContent = "Cargando movimientos…"; $("#eh").hidden = false;
+  try {
+    const r = await fetch(WEBHOOK_HISTORIAL, { method: "POST", body: new URLSearchParams({ accion: "historial" }) });
+    const j = JSON.parse(await r.text());
+    movs = (j.movimientos || []).sort((a,b) => String(b.fecha).localeCompare(String(a.fecha)));
+    cargado = true; filtrar();
+  } catch {
+    $("#eh").textContent = "No se pudo leer el historial. Verifique que el escenario «Historial» esté activo y su URL en la configuración.";
+  }
+}
+function filtrar(){
+  const t = $("#fc").value.trim().toLowerCase(), fr = $("#fr").value, fm = $("#fm").value;
+  const v = movs.filter(m => (!t || (m.codigo + " " + m.producto).toLowerCase().includes(t)) && (!fr || m.resultado === fr) && (!fm || m.motivo === fm));
+  $("#tb").innerHTML = v.map(m => `<tr><td>${esc(m.fecha)}</td><td>${esc(m.id)}</td><td><b>${esc(m.codigo)}</b><br>${esc(m.producto)}</td><td>${esc(m.motivo)}</td><td>${esc(m.cantidad)}</td><td>${esc(m.antes)}</td><td>${esc(m.saldo)}</td><td>${esc(m.minimo)}</td><td>${pesos(m.valor)}</td><td>${esc(m.destino)}</td><td>${esc(m.solicitante)}</td><td><span class="chip ${m.resultado === "APROBADO" ? "c-ok" : "c-al"}">${esc(m.resultado)}</span>${m.nivel ? "<br><small>" + esc(m.nivel) + "</small>" : ""}</td></tr>`).join("");
+  $("#eh").hidden = v.length > 0;
+  if (!v.length) $("#eh").textContent = movs.length ? "Ningún movimiento coincide con el filtro." : "Aún no hay movimientos. Registre el primer despacho en la otra vista.";
+  // Indicadores
+  const tiempos = v.map(m => Number(m.tiempo)).filter(n => !isNaN(n) && n >= 0);
+  $("#k1").textContent = tiempos.length ? (tiempos.reduce((a,b) => a+b, 0) / tiempos.length).toFixed(1) : "–";
+  $("#k2").textContent = v.length ? (100 * v.filter(m => m.resultado === "APROBADO CON ALERTA").length / v.length).toFixed(1) + " %" : "–";
+  $("#k3").textContent = pesos(v.reduce((a,m) => a + (Number(m.valor) || 0), 0));
+}
+["#fc","#fr","#fm"].forEach(s => $(s).addEventListener("input", filtrar));
+$("#recargar").onclick = cargarHistorial;
+</script>
+</body>
+</html>

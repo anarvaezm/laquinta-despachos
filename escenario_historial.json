@@ -1,0 +1,463 @@
+{
+    "name": "La Quinta · Historial de movimientos",
+    "flow": [
+        {
+            "id": 1,
+            "module": "gateway:CustomWebHook",
+            "version": 1,
+            "parameters": {
+                "hook": 3878758,
+                "maxResults": 1
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "setupValidation": {
+                    "result": {
+                        "valid": true,
+                        "fields": []
+                    },
+                    "version": 1,
+                    "configuration": "3eeed344f7a95c8"
+                },
+                "restore": {
+                    "parameters": {
+                        "hook": {
+                            "data": {
+                                "editable": "true"
+                            },
+                            "label": "   laquinta-historial"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "hook",
+                        "type": "hook:gateway-webhook",
+                        "label": "Webhook",
+                        "required": true
+                    },
+                    {
+                        "name": "maxResults",
+                        "type": "number",
+                        "label": "Maximum number of results"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "module": "google-sheets:filterRows",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 11795789
+            },
+            "mapper": {
+                "from": "drive",
+                "limit": "500",
+                "sheetId": "Movimientos",
+                "sortOrder": "asc",
+                "spreadsheetId": "1p-PwBJETbS4Tk9iEiNUoNBWM3hBiCmmXWGNIz-XjcSQ",
+                "tableFirstRow": "A1:Z1",
+                "includesHeaders": true,
+                "valueRenderOption": "UNFORMATTED_VALUE",
+                "dateTimeRenderOption": "FORMATTED_STRING"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "setupValidation": {
+                    "result": {
+                        "valid": true,
+                        "fields": []
+                    },
+                    "version": 1,
+                    "configuration": "4621718d5e7872df"
+                },
+                "restore": {
+                    "expect": {
+                        "from": {
+                            "label": "Select from My Drive"
+                        },
+                        "orderBy": {
+                            "mode": "chose",
+                            "label": "Empty"
+                        },
+                        "sheetId": {
+                            "mode": "chose",
+                            "label": "Movimientos"
+                        },
+                        "sortOrder": {
+                            "mode": "chose",
+                            "label": "Ascending"
+                        },
+                        "spreadsheetId": {
+                            "mode": "chose",
+                            "label": "LaQuinta_Despachos"
+                        },
+                        "tableFirstRow": {
+                            "label": "A-Z"
+                        },
+                        "includesHeaders": {
+                            "mode": "chose",
+                            "label": "Yes"
+                        },
+                        "valueRenderOption": {
+                            "mode": "chose",
+                            "label": "Unformatted value"
+                        },
+                        "dateTimeRenderOption": {
+                            "mode": "chose",
+                            "label": "Formatted string"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google"
+                            },
+                            "label": "Alcides's Google connection"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:google",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "from",
+                        "type": "select",
+                        "label": "Search Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "valueRenderOption",
+                        "type": "select",
+                        "label": "Value render option",
+                        "validate": {
+                            "enum": [
+                                "FORMATTED_VALUE",
+                                "UNFORMATTED_VALUE",
+                                "FORMULA"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "dateTimeRenderOption",
+                        "type": "select",
+                        "label": "Date and time render option",
+                        "validate": {
+                            "enum": [
+                                "SERIAL_NUMBER",
+                                "FORMATTED_STRING"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "type": "uinteger",
+                        "label": "Limit"
+                    },
+                    {
+                        "name": "spreadsheetId",
+                        "type": "select",
+                        "label": "Spreadsheet Name",
+                        "required": true
+                    },
+                    {
+                        "name": "sheetId",
+                        "type": "select",
+                        "label": "Sheet Name",
+                        "required": true
+                    },
+                    {
+                        "name": "includesHeaders",
+                        "type": "select",
+                        "label": "Table contains headers",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                true,
+                                false
+                            ]
+                        }
+                    },
+                    {
+                        "name": "tableFirstRow",
+                        "type": "select",
+                        "label": "Column range",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "A1:Z1",
+                                "A1:BZ1",
+                                "A1:CZ1",
+                                "A1:DZ1",
+                                "A1:MZ1",
+                                "A1:ZZ1",
+                                "A1:AZZ1",
+                                "A1:BZZ1",
+                                "A1:CZZ1",
+                                "A1:DZZ1",
+                                "A1:MZZ1",
+                                "A1:ZZZ1"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "filter",
+                        "type": "filter",
+                        "label": "Filter",
+                        "options": "rpc://google-sheets/2/rpcGetFilterKeys?includesHeaders=true"
+                    },
+                    {
+                        "name": "orderBy",
+                        "type": "select",
+                        "label": "Order by"
+                    },
+                    {
+                        "name": "sortOrder",
+                        "type": "select",
+                        "label": "Sort order",
+                        "validate": {
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "__ROW_NUMBER__",
+                        "type": "number",
+                        "label": "Row number"
+                    },
+                    {
+                        "name": "__SPREADSHEET_ID__",
+                        "type": "text",
+                        "label": "Spreadsheet ID"
+                    },
+                    {
+                        "name": "__SHEET__",
+                        "type": "text",
+                        "label": "Sheet"
+                    },
+                    {
+                        "name": "0",
+                        "type": "text",
+                        "label": "id_movimiento (A)"
+                    },
+                    {
+                        "name": "1",
+                        "type": "text",
+                        "label": "fecha_hora_registro (B)"
+                    },
+                    {
+                        "name": "2",
+                        "type": "text",
+                        "label": "fecha_solicitud (C)"
+                    },
+                    {
+                        "name": "3",
+                        "type": "text",
+                        "label": "codigo_producto (D)"
+                    },
+                    {
+                        "name": "4",
+                        "type": "text",
+                        "label": "producto (E)"
+                    },
+                    {
+                        "name": "5",
+                        "type": "text",
+                        "label": "unidad (F)"
+                    },
+                    {
+                        "name": "6",
+                        "type": "text",
+                        "label": "tipo_movimiento (G)"
+                    },
+                    {
+                        "name": "7",
+                        "type": "text",
+                        "label": "motivo (H)"
+                    },
+                    {
+                        "name": "8",
+                        "type": "text",
+                        "label": "cantidad (I)"
+                    },
+                    {
+                        "name": "9",
+                        "type": "text",
+                        "label": "existencias_antes (J)"
+                    },
+                    {
+                        "name": "10",
+                        "type": "text",
+                        "label": "saldo_despues (K)"
+                    },
+                    {
+                        "name": "11",
+                        "type": "text",
+                        "label": "minimo (L)"
+                    },
+                    {
+                        "name": "12",
+                        "type": "text",
+                        "label": "costo_unitario (M)"
+                    },
+                    {
+                        "name": "13",
+                        "type": "text",
+                        "label": "valor_total (N)"
+                    },
+                    {
+                        "name": "14",
+                        "type": "text",
+                        "label": "destino (O)"
+                    },
+                    {
+                        "name": "15",
+                        "type": "text",
+                        "label": "solicitante (P)"
+                    },
+                    {
+                        "name": "16",
+                        "type": "text",
+                        "label": "correo (Q)"
+                    },
+                    {
+                        "name": "17",
+                        "type": "text",
+                        "label": "resultado (R)"
+                    },
+                    {
+                        "name": "18",
+                        "type": "text",
+                        "label": "nivel_alerta (S)"
+                    },
+                    {
+                        "name": "19",
+                        "type": "text",
+                        "label": "tiempo_respuesta_seg (T)"
+                    },
+                    {
+                        "name": "20",
+                        "type": "text",
+                        "label": "id_ejecucion_make (U)"
+                    },
+                    {
+                        "name": "21",
+                        "type": "text",
+                        "label": "(V)"
+                    },
+                    {
+                        "name": "22",
+                        "type": "text",
+                        "label": "(W)"
+                    },
+                    {
+                        "name": "23",
+                        "type": "text",
+                        "label": "(X)"
+                    },
+                    {
+                        "name": "24",
+                        "type": "text",
+                        "label": "(Y)"
+                    },
+                    {
+                        "name": "25",
+                        "type": "text",
+                        "label": "(Z)"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "module": "util:TextAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 2,
+                "rowSeparator": "other",
+                "otherRowSeparator": ","
+            },
+            "mapper": {
+                "value": "{\"id\":\"{{2.`0`}}\",\"fecha\":\"{{2.`1`}}\",\"codigo\":\"{{2.`3`}}\",\"producto\":\"{{2.`4`}}\",\"unidad\":\"{{2.`5`}}\",\"motivo\":\"{{2.`7`}}\",\"cantidad\":\"{{2.`8`}}\",\"antes\":\"{{2.`9`}}\",\"saldo\":\"{{2.`10`}}\",\"minimo\":\"{{2.`11`}}\",\"valor\":\"{{2.`13`}}\",\"destino\":\"{{2.`14`}}\",\"solicitante\":\"{{2.`15`}}\",\"resultado\":\"{{2.`17`}}\",\"nivel\":\"{{2.`18`}}\",\"tiempo\":\"{{2.`19`}}\"}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                }
+            }
+        },
+        {
+            "id": 4,
+            "module": "gateway:WebhookRespond",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "body": "{\"movimientos\":[{{3.text}}]}",
+                "status": "200",
+                "headers": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Access-Control-Allow-Origin",
+                        "value": "*"
+                    }
+                ]
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.make.com",
+        "notes": []
+    }
+}
